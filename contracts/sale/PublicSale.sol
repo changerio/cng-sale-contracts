@@ -97,4 +97,15 @@ contract PublicSale is
   function goal() public view returns (uint256) {
     revert("PublicSale: not supported");
   }
+
+  /**
+   * @dev Overrides Crowdsale._preValidatePurchase
+   * @param beneficiary Address performing the token purchase
+   * @param weiAmount Value in wei involved in the purchase
+   */
+  function _preValidatePurchase(address beneficiary, uint256 weiAmount) internal view {
+    super._preValidatePurchase(beneficiary, weiAmount);
+    require(msg.sender == tx.origin, "PublicSale: invalid tx origin");
+    this; // silence state mutability warning without generating bytecode - see https://github.com/ethereum/solidity/issues/2691
+  }
 }
